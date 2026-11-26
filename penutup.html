@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<script src="fullscreen.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Penutup</title>
@@ -164,6 +163,7 @@
   document.getElementById('fs').addEventListener('click', toggleFS);
   document.addEventListener('keydown', e=>{
     if(e.key==='ArrowLeft') go('back');
+    if(e.key==='f' || e.key==='F') toggleFS();
   });
 </script>
 </body>
