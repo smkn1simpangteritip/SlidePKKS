@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rencana Kerja Tahunan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E3B43; --bg2:#0A2C33; --gold:#F0B429; --paper:#F4F7F6; --muted:#A9C4C6; --line:rgba(244,247,246,.16);
+    --display:'Bricolage Grotesque','Trebuchet MS',Arial,sans-serif;
+    --body:'Figtree','Segoe UI',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{min-height:100%}
+  body{
+    font-family:var(--body);color:var(--paper);overflow-x:hidden;
+    background:
+      linear-gradient(rgba(10,44,51,.72),rgba(10,44,51,.72)),
+      url('bg.png') center/cover no-repeat fixed,
+      radial-gradient(1200px 700px at 85% 20%,#14525c 0%,var(--bg) 45%,var(--bg2) 100%);
+  }
+  .logo{position:fixed;top:clamp(14px,2vw,28px);right:clamp(16px,3vw,48px);z-index:5;
+    height:clamp(44px,5.5vw,76px);width:auto;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+
+  .slide{min-height:100vh;max-width:1440px;margin:auto;padding:clamp(24px,4vw,64px) clamp(20px,5vw,80px) 170px}
+  h1{font-family:var(--display);font-weight:800;letter-spacing:-.02em;font-size:clamp(32px,5vw,68px);line-height:1.05;
+    padding-bottom:18px;border-bottom:3px solid var(--gold);width:max-content;max-width:100%}
+  .sub{color:var(--muted);margin:14px 0 26px;font-size:clamp(14px,1.2vw,17px)}
+
+  /* pilihan tampilan */
+  .switch{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+  .sw{cursor:pointer;font:700 clamp(14px,1.2vw,17px)/1.2 var(--display);color:var(--paper);
+    background:rgba(10,44,51,.55);border:2px solid var(--line);border-radius:999px;padding:12px 22px;
+    transition:background .2s,border-color .2s,color .2s}
+  .sw:hover{border-color:var(--gold)}
+  .sw[aria-selected="true"]{background:var(--gold);border-color:var(--gold);color:var(--bg2)}
+  .sw:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+  .view[hidden]{display:none}
+  .view.show{animation:rise .35s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  /* program prioritas */
+  .legend{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--muted);font-size:14px;margin-bottom:18px}
+  .legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;background:var(--st)}
+  .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+  .pc{--st:#F28C38;background:rgba(10,44,51,.62);border-top:6px solid var(--st);border-radius:6px 6px 22px 22px;
+    padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px}
+  .pc.baik{--st:#3DBE93} .pc.tingkat{--st:#4CC3D9}
+  .pc .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .rom{font:800 clamp(24px,2.4vw,34px) var(--display);color:var(--st);line-height:1}
+  .badge{font:700 12.5px var(--body);color:var(--bg2);background:var(--st);border-radius:999px;padding:4px 12px;white-space:nowrap}
+  .pc h3{font:800 clamp(18px,1.7vw,24px)/1.15 var(--display)}
+  .dasar{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);font-size:clamp(14px,1.15vw,16px);line-height:1.45}
+  .dasar small{display:block;color:var(--muted);font-size:13px;margin-bottom:3px}
+
+  /* strategi */
+  .lead{color:var(--muted);margin-bottom:18px;font-size:clamp(14px,1.2vw,17px)}
+  .strategi{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+  .sc{grid-column:span 2;background:rgba(10,44,51,.62);border-left:6px solid var(--gold);border-radius:4px 24px 24px 4px;padding:20px}
+  .sc:nth-child(n+4){grid-column:span 3}
+  .sc .n{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--bg2);
+    font:800 18px var(--display);margin-bottom:12px}
+  .sc h3{font:800 clamp(19px,1.8vw,26px)/1.15 var(--display);margin-bottom:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:6px 14px;border-radius:999px;border:2px solid var(--line);font-weight:600;font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.3}
+
+  /* tombol navigasi */
+  .nav{position:fixed;bottom:clamp(14px,2.5vw,40px);width:112px;height:112px;border:0;background:none;color:var(--paper);
+    text-decoration:none;display:grid;place-items:center;cursor:pointer;z-index:6}
+  .nav.next{right:clamp(14px,3vw,48px)} .nav.back{left:clamp(14px,3vw,48px)}
+  .nav svg.ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 14s linear infinite}
+  .nav.back svg.ring{animation-direction:reverse}
+  .nav text{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.16em;fill:var(--paper)}
+  .nav .core{width:54px;height:54px;border-radius:50%;background:var(--gold);color:var(--bg2);display:grid;place-items:center;transition:width .25s,height .25s}
+  .nav .core svg{width:24px;height:24px;transition:transform .3s}
+  .nav:hover .core,.nav:focus-visible .core{width:66px;height:66px}
+  .nav.next:hover .core svg{transform:translateX(5px)} .nav.back:hover .core svg{transform:translateX(-5px)}
+  .nav:hover svg.ring{animation-duration:4s}
+  .nav:focus-visible{outline:3px solid var(--gold);outline-offset:4px;border-radius:50%}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* transisi: mosaik kotak merambat diagonal */
+  .tiles{position:fixed;inset:0;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(5,1fr);
+    pointer-events:none;z-index:10}
+  .tiles i{background:var(--gold);transform:scale(0);transition:transform .35s ease;transition-delay:var(--d)}
+  .tiles i.alt{background:#14525c}
+  .tiles.go i{transform:scale(1.03)}
+  .tiles.enter i{animation:tileOut .4s ease both;animation-delay:var(--d)}
+  @keyframes tileOut{from{transform:scale(1.03)}to{transform:scale(0)}}
+
+  @media (max-width:1100px){
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .strategi{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .sc,.sc:nth-child(n+4){grid-column:auto}
+    .sc:last-child{grid-column:1/-1}
+  }
+  @media (max-width:640px){
+    .slide{padding-top:96px}
+    h1{width:auto}
+    .grid,.strategi{grid-template-columns:1fr}
+    .sc:last-child{grid-column:auto}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .nav svg.ring{animation:none}.view.show{animation:none}
+    .tiles i{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<img class="logo" src="logosekolah.png" alt="Logo sekolah" onerror="this.style.display='none'">
+
+<main class="slide">
+  <h1>Rencana Kerja Tahunan</h1>
+  <p class="sub">Rencana kerja tahunan kepala sekolah</p>
+
+  <div class="switch" role="tablist" aria-label="Pilih tampilan">
+    <button class="sw" role="tab" id="s1" aria-selected="true" aria-controls="v1">Penetapan program prioritas</button>
+    <button class="sw" role="tab" id="s2" aria-selected="false" aria-controls="v2">Strategi umum peningkatan mutu sekolah</button>
+  </div>
+
+  <section class="view show" id="v1" role="tabpanel" aria-labelledby="s1">
+    <div class="legend">
+      <span style="--st:#F28C38">Kategori sedang</span>
+      <span style="--st:#3DBE93">Kategori baik, dipertahankan</span>
+      <span style="--st:#4CC3D9">Dipertahankan dan ditingkatkan</span>
+    </div>
+    <div class="grid">
+      <article class="pc sedang"><div class="top"><span class="rom">I</span><span class="badge">Kategori sedang</span></div>
+        <h3>Peningkatan Karakter Murid</h3><p class="dasar"><small>Dasar penetapan</small>Karakter masih kategori sedang</p></article>
+      <article class="pc sedang"><div class="top"><span class="rom">II</span><span class="badge">Kategori sedang</span></div>
+        <h3>Peningkatan Kualitas Pembelajaran</h3><p class="dasar"><small>Dasar penetapan</small>Pembelajaran masih kategori sedang</p></article>
+      <article class="pc sedang"><div class="top"><span class="rom">III</span><span class="badge">Kategori sedang</span></div>
+        <h3>Penguatan Kemitraan Dunia Kerja</h3><p class="dasar"><small>Dasar penetapan</small>Keselarasan DUDI masih sedang</p></article>
+      <article class="pc baik"><div class="top"><span class="rom">IV</span><span class="badge">Kategori baik</span></div>
+        <h3>Penguatan Literasi</h3><p class="dasar"><small>Dasar penetapan</small>Mempertahankan kategori baik</p></article>
+      <article class="pc baik"><div class="top"><span class="rom">V</span><span class="badge">Kategori baik</span></div>
+        <h3>Penguatan Numerasi</h3><p class="dasar"><small>Dasar penetapan</small>Mempertahankan kategori baik</p></article>
+      <article class="pc baik"><div class="top"><span class="rom">VI</span><span class="badge">Kategori baik</span></div>
+        <h3>Penguatan Kebhinekaan</h3><p class="dasar"><small>Dasar penetapan</small>Mempertahankan kategori baik</p></article>
+      <article class="pc baik"><div class="top"><span class="rom">VII</span><span class="badge">Kategori baik</span></div>
+        <h3>Sekolah Aman</h3><p class="dasar"><small>Dasar penetapan</small>Mempertahankan kategori baik</p></article>
+      <article class="pc tingkat"><div class="top"><span class="rom">VIII</span><span class="badge">Pertahankan &amp; tingkatkan</span></div>
+        <h3>Penguatan Penyerapan Lulusan</h3><p class="dasar"><small>Dasar penetapan</small>Mempertahankan dan meningkatkan kualitas penempatan kerja</p></article>
+    </div>
+  </section>
+
+  <section class="view" id="v2" role="tabpanel" aria-labelledby="s2" hidden>
+    <p class="lead">Strategi pengembangan sekolah dilaksanakan melalui lima pendekatan utama yang saling mendukung.</p>
+    <div class="strategi">
+      <article class="sc"><span class="n">1</span><h3>Peningkatan kualitas pembelajaran</h3><div class="chips"><span class="chip">Supervisi akademik</span><span class="chip">Penguatan komunitas belajar</span><span class="chip">Pelatihan guru</span><span class="chip">Lesson study</span><span class="chip">Pembelajaran aktif</span><span class="chip">Pembelajaran berdiferensiasi</span><span class="chip">Pembelajaran berbasis proyek</span><span class="chip">Pemanfaatan teknologi digital</span></div></article>
+      <article class="sc"><span class="n">2</span><h3>Penguatan karakter dan budaya sekolah</h3><div class="chips"><span class="chip">Pembiasaan nilai-nilai Profil Pelajar Pancasila</span><span class="chip">Pengembangan budaya positif</span><span class="chip">Layanan bimbingan dan konseling</span><span class="chip">Kegiatan ekstrakurikuler</span><span class="chip">Pelibatan orang tua dalam pembinaan karakter</span></div></article>
+      <article class="sc"><span class="n">3</span><h3>Penguatan kemitraan dengan dunia kerja</h3><div class="chips"><span class="chip">Sinkronisasi kurikulum</span><span class="chip">Pengembangan Teaching Factory</span><span class="chip">Perluasan kerja sama dengan DUDI</span><span class="chip">Peningkatan kualitas PKL</span><span class="chip">Sertifikasi kompetensi</span><span class="chip">Optimalisasi Bursa Kerja Khusus</span></div></article>
+      <article class="sc"><span class="n">4</span><h3>Pengembangan tata kelola sekolah berbasis data</h3><div class="chips"><span class="chip">Hasil Rapor Pendidikan sebagai dasar penyusunan RKJM, RKT, RKAS</span><span class="chip">Monitoring dan evaluasi berkala</span><span class="chip">Terdokumentasi</span></div></article>
+      <article class="sc"><span class="n">5</span><h3>Optimalisasi sarana dan prasarana</h3><div class="chips"><span class="chip">Pemeliharaan fasilitas</span><span class="chip">Modernisasi laboratorium dan bengkel</span><span class="chip">Digitalisasi layanan pembelajaran</span><span class="chip">Penerapan standar keselamatan dan kesehatan kerja (K3)</span></div></article>
+    </div>
+  </section>
+</main>
+
+<a class="nav back" id="back" href="rkjm.html" aria-label="Kembali ke halaman sebelumnya">
+  <svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c1" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+    <text><textPath href="#c1">BACK • SEBELUMNYA • BACK • SEBELUMNYA •</textPath></text></svg>
+  <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span>
+</a>
+
+<a class="nav next" id="next" href="rapor.html" aria-label="Lanjut ke halaman berikutnya">
+  <svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c2" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+    <text><textPath href="#c2">NEXT • SELANJUTNYA • NEXT • SELANJUTNYA •</textPath></text></svg>
+  <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+</a>
+
+<div class="tiles enter" id="tiles"><i class="" style="--d:0ms"></i><i class="alt" style="--d:45ms"></i><i class="" style="--d:90ms"></i><i class="alt" style="--d:135ms"></i><i class="" style="--d:180ms"></i><i class="alt" style="--d:225ms"></i><i class="" style="--d:270ms"></i><i class="alt" style="--d:315ms"></i><i class="alt" style="--d:45ms"></i><i class="" style="--d:90ms"></i><i class="alt" style="--d:135ms"></i><i class="" style="--d:180ms"></i><i class="alt" style="--d:225ms"></i><i class="" style="--d:270ms"></i><i class="alt" style="--d:315ms"></i><i class="" style="--d:360ms"></i><i class="" style="--d:90ms"></i><i class="alt" style="--d:135ms"></i><i class="" style="--d:180ms"></i><i class="alt" style="--d:225ms"></i><i class="" style="--d:270ms"></i><i class="alt" style="--d:315ms"></i><i class="" style="--d:360ms"></i><i class="alt" style="--d:405ms"></i><i class="alt" style="--d:135ms"></i><i class="" style="--d:180ms"></i><i class="alt" style="--d:225ms"></i><i class="" style="--d:270ms"></i><i class="alt" style="--d:315ms"></i><i class="" style="--d:360ms"></i><i class="alt" style="--d:405ms"></i><i class="" style="--d:450ms"></i><i class="" style="--d:180ms"></i><i class="alt" style="--d:225ms"></i><i class="" style="--d:270ms"></i><i class="alt" style="--d:315ms"></i><i class="" style="--d:360ms"></i><i class="alt" style="--d:405ms"></i><i class="" style="--d:450ms"></i><i class="alt" style="--d:495ms"></i></div>
+
+<script>
+  /* pilih tampilan */
+  const sws = [...document.querySelectorAll('.sw')];
+  const views = [...document.querySelectorAll('.view')];
+  let cur = 0;
+  function pick(n){
+    cur = (n + sws.length) % sws.length;
+    sws.forEach((b,i)=> b.setAttribute('aria-selected', i===cur));
+    views.forEach((v,i)=>{ v.hidden = i!==cur; v.classList.toggle('show', i===cur); });
+  }
+  sws.forEach((b,i)=> b.addEventListener('click', ()=>pick(i)));
+
+  /* transisi halaman */
+  const tiles = document.getElementById('tiles');
+  tiles.lastElementChild.addEventListener('animationend', ()=> tiles.classList.remove('enter'));
+  function go(id){
+    const a = document.getElementById(id);
+    tiles.classList.remove('enter');
+    tiles.getBoundingClientRect();
+    tiles.classList.add('go');
+    setTimeout(()=>{ location.href = a.getAttribute('href'); }, 900);
+  }
+  ['back','next'].forEach(id=>{
+    document.getElementById(id).addEventListener('click', e=>{ e.preventDefault(); go(id); });
+  });
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight') go('next');
+    if(e.key==='ArrowLeft')  go('back');
+    if(e.key==='ArrowDown'){ e.preventDefault(); pick(cur+1); }
+    if(e.key==='ArrowUp'){ e.preventDefault(); pick(cur-1); }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perkembangan Rapor Pendidikan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E3B43; --bg2:#0A2C33; --gold:#F0B429; --paper:#F4F7F6; --muted:#A9C4C6; --line:rgba(244,247,246,.16);
+    --baik:#3DBE93; --sedang:#F2A93B; --kurang:#E5646E;
+    --display:'Bricolage Grotesque','Trebuchet MS',Arial,sans-serif;
+    --body:'Figtree','Segoe UI',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{min-height:100%}
+  body{
+    font-family:var(--body);color:var(--paper);overflow-x:hidden;
+    background:
+      linear-gradient(rgba(10,44,51,.72),rgba(10,44,51,.72)),
+      url('bg.png') center/cover no-repeat fixed,
+      radial-gradient(1200px 700px at 85% 20%,#14525c 0%,var(--bg) 45%,var(--bg2) 100%);
+  }
+  .logo{position:fixed;top:clamp(14px,2vw,28px);right:clamp(16px,3vw,48px);z-index:5;
+    height:clamp(44px,5.5vw,76px);width:auto;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+  .slide{min-height:100vh;max-width:1440px;margin:auto;padding:clamp(24px,4vw,64px) clamp(20px,5vw,80px) 170px}
+  h1{font-family:var(--display);font-weight:800;letter-spacing:-.02em;font-size:clamp(30px,4.8vw,66px);line-height:1.05;
+    padding-bottom:18px;border-bottom:3px solid var(--gold);width:max-content;max-width:100%}
+  .sub{color:var(--muted);margin:14px 0 24px;font-size:clamp(14px,1.2vw,17px)}
+
+  .switch{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+  .sw{cursor:pointer;font:700 clamp(14px,1.2vw,17px)/1.2 var(--display);color:var(--paper);background:rgba(10,44,51,.55);
+    border:2px solid var(--line);border-radius:999px;padding:11px 22px;transition:background .2s,border-color .2s,color .2s}
+  .sw:hover{border-color:var(--gold)}
+  .sw[aria-selected="true"]{background:var(--gold);border-color:var(--gold);color:var(--bg2)}
+  .sw:focus-visible,.zoom:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+  .view[hidden]{display:none}
+  .view.show{animation:rise .35s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  h2{font:800 clamp(22px,2.6vw,36px)/1.15 var(--display);letter-spacing:-.01em}
+  h2.sec{margin:34px 0 14px}
+
+  /* gambar rapor */
+  .shot{margin:0}
+  .zoom{position:relative;display:block;width:100%;padding:0;border:3px solid var(--gold);border-radius:16px;overflow:hidden;
+    background:#1b5560;cursor:zoom-in;min-height:120px}
+  .zoom img{display:block;width:100%;height:auto}
+  .zoom .miss{display:none;padding:40px 16px;color:var(--muted);font-size:14px;text-align:center}
+  .zoom.empty img{display:none} .zoom.empty .miss{display:block}
+  .shot figcaption{margin-top:8px;color:var(--muted);font-size:14px;text-align:center}
+  .thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,28px)}
+  .th .zoom{transition:transform .25s;cursor:pointer}
+  .th .zoom:hover{transform:translateY(-6px)}
+
+  /* kategori */
+  .dot{display:inline-block;font:700 13px/1 var(--body);font-style:normal;color:var(--bg2);border-radius:999px;padding:6px 12px;background:var(--c)}
+  .dot.baik,.seg.baik{--c:var(--baik)} .dot.sedang,.seg.sedang{--c:var(--sedang)} .dot.kurang,.seg.kurang{--c:var(--kurang)}
+  .counts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 20px}
+  .counts .dot{font-size:15px;padding:8px 16px}
+
+  /* komposisi + deskripsi */
+  .two{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(20px,3vw,48px);align-items:start}
+  .panel{background:rgba(10,44,51,.62);border-left:6px solid var(--gold);border-radius:4px 24px 24px 4px;padding:clamp(18px,2.2vw,30px)}
+  .panel h3{font:800 20px var(--display);color:var(--gold);margin-bottom:16px}
+  .bar{display:grid;grid-template-columns:52px 1fr;align-items:center;gap:12px;margin-bottom:12px}
+  .bar b{font:800 18px var(--display)}
+  .stack{display:flex;gap:3px;height:38px}
+  .seg{display:grid;place-items:center;background:var(--c);color:var(--bg2);font:800 15px var(--display);border-radius:8px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .note-s{color:var(--muted);font-size:13px;margin-top:10px;line-height:1.4}
+
+  .notes{display:grid;gap:12px}
+  .note{background:rgba(244,247,246,.07);border-left:5px solid var(--nc,var(--gold));border-radius:4px 14px 14px 4px;padding:12px 16px}
+  .note h3{font:700 clamp(15px,1.3vw,18px)/1.25 var(--display);margin-bottom:4px;color:var(--nc,var(--paper))}
+  .note p{font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;color:#D8E6E6}
+  .note.up{--nc:var(--baik)} .note.down{--nc:var(--kurang)} .note.warn{--nc:var(--sedang)} .note.best{--nc:var(--gold)} .note.info{--nc:#4CC3D9}
+
+  /* jejak per indikator */
+  .mxbox{overflow-x:auto}
+  .mx{min-width:560px}
+  .mx-h,.mx-r{display:grid;grid-template-columns:minmax(150px,1.5fr) repeat(3,minmax(0,1fr));gap:10px;align-items:center}
+  .mx-h b{font:800 20px var(--display);text-align:center;color:var(--gold);padding-bottom:8px}
+  .mx-r{padding:10px 0;border-top:1px solid var(--line)}
+  .lab{font:700 clamp(14px,1.2vw,17px) var(--display)}
+  .cell{display:flex;align-items:center;justify-content:center;gap:8px}
+  .ar{font-style:normal;font-weight:800;font-size:18px;line-height:1}
+  .ar.up{color:var(--baik)} .ar.down{color:var(--kurang)} .ar.neu{color:var(--muted);font-size:12px;font-weight:600}
+  .keyline{color:var(--muted);font-size:13px;margin-top:12px}
+
+
+  /* tab perkembangan */
+  .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,24px);margin-bottom:22px}
+  .kpi{background:rgba(10,44,51,.62);border-left:6px solid var(--gold);border-radius:4px 22px 22px 4px;padding:clamp(16px,2vw,26px)}
+  .kpi small{display:block;color:var(--muted);font-size:14px;margin-bottom:6px}
+  .kpi strong{display:block;font:800 clamp(30px,3.6vw,50px)/1 var(--display)}
+  .kpi strong.up{color:var(--baik)} .kpi strong.down{color:var(--kurang)}
+  .kpi span{display:block;color:#D8E6E6;font-size:14px;line-height:1.45;margin-top:8px}
+  .tr-h,.tr-r{display:grid;grid-template-columns:minmax(150px,1.5fr) repeat(3,minmax(0,.8fr)) minmax(90px,.8fr) minmax(130px,1fr);gap:10px;align-items:center}
+  .tr-h b{font:800 16px var(--display);text-align:center;color:var(--gold);padding-bottom:8px}
+  .tr-r{padding:10px 0;border-top:1px solid var(--line)}
+  .tr-r .cell{flex-direction:column;gap:3px} .tr-r .cell small{color:var(--muted);font-size:12px}
+  .tag{font:800 13px/1.2 var(--body);text-align:center;border-radius:10px;padding:7px 10px;color:var(--bg2);background:var(--c)}
+  .tag.fix{--c:var(--kurang)} .tag.keep{--c:var(--baik)} .tag.best{--c:var(--gold)}
+  .trend{font:800 15px var(--display);text-align:center} .trend.up{color:var(--baik)} .trend.down{color:var(--kurang)} .trend.neu{color:var(--muted)}
+  .pbar{display:grid;grid-template-columns:52px 1fr 64px;align-items:center;gap:12px;margin-bottom:12px}
+  .pbar b{font:800 18px var(--display)} .pbar em{font:800 16px var(--display);font-style:normal;text-align:right}
+  .track{background:rgba(244,247,246,.1);border-radius:8px;height:30px;overflow:hidden}
+  .fill{height:100%;background:var(--baik);border-radius:8px;transition:width .6s ease}
+
+  /* lightbox */
+  .lb{position:fixed;inset:0;z-index:15;background:rgba(5,20,24,.92);display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+  .lb.open{display:flex}
+  .lb img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+
+  /* tombol navigasi */
+  .nav{position:fixed;bottom:clamp(14px,2.5vw,40px);width:112px;height:112px;border:0;background:none;color:var(--paper);
+    text-decoration:none;display:grid;place-items:center;cursor:pointer;z-index:6}
+  .nav.next{right:clamp(14px,3vw,48px)} .nav.back{left:clamp(14px,3vw,48px)}
+  .nav svg.ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 14s linear infinite}
+  .nav.back svg.ring{animation-direction:reverse}
+  .nav text{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.16em;fill:var(--paper)}
+  .nav .core{width:54px;height:54px;border-radius:50%;background:var(--gold);color:var(--bg2);display:grid;place-items:center;transition:width .25s,height .25s}
+  .nav .core svg{width:24px;height:24px;transition:transform .3s}
+  .nav:hover .core,.nav:focus-visible .core{width:66px;height:66px}
+  .nav.next:hover .core svg{transform:translateX(5px)} .nav.back:hover .core svg{transform:translateX(-5px)}
+  .nav:hover svg.ring{animation-duration:4s}
+  .nav:focus-visible{outline:3px solid var(--gold);outline-offset:4px;border-radius:50%}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* transisi: pita horizontal bergeser berlawanan arah */
+  .bands{position:fixed;inset:0;display:flex;flex-direction:column;pointer-events:none;z-index:20}
+  .bands i{flex:1;background:var(--gold);transform:translateX(-101%);transition:transform .5s cubic-bezier(.7,0,.3,1);transition-delay:calc(var(--i)*60ms)}
+  .bands i:nth-child(even){background:#14525c;transform:translateX(101%)}
+  .bands.go i{transform:none}
+  .bands.enter i{transform:none;animation:bandR .5s cubic-bezier(.7,0,.3,1) both;animation-delay:calc(var(--i)*60ms)}
+  .bands.enter i:nth-child(even){animation-name:bandL}
+  @keyframes bandR{to{transform:translateX(101%)}}
+  @keyframes bandL{to{transform:translateX(-101%)}}
+
+  .yv{display:grid;grid-template-columns:minmax(260px,420px) minmax(0,1fr);gap:clamp(20px,3.5vw,56px);align-items:start}
+  .yv .shot{position:sticky;top:24px}
+
+  @media (max-width:980px){
+    .two,.yv,.kpis{grid-template-columns:1fr}
+    .yv .shot{position:static;max-width:460px}
+  }
+  @media (max-width:640px){
+    .slide{padding-top:96px}
+    h1{width:auto}
+    .thumbs{grid-template-columns:1fr;max-width:420px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .nav svg.ring{animation:none}.view.show{animation:none}
+    .bands i{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<img class="logo" src="logosekolah.png" alt="Logo sekolah" onerror="this.style.display='none'">
+
+<main class="slide">
+  <h1>Perkembangan Rapor Pendidikan</h1>
+  <p class="sub">SMK Negeri 1 Simpang Teritip, tahun 2023 sampai 2025</p>
+
+  <div class="switch" role="tablist" aria-label="Pilih tampilan">
+    <button class="sw" role="tab" id="t0" aria-selected="true" aria-controls="v0">Ringkasan 3 tahun</button>
+    <button class="sw" role="tab" id="t2023" aria-selected="false" aria-controls="v2023">Rapor 2023</button>
+    <button class="sw" role="tab" id="t2024" aria-selected="false" aria-controls="v2024">Rapor 2024</button>
+    <button class="sw" role="tab" id="t2025" aria-selected="false" aria-controls="v2025">Rapor 2025</button>
+    <button class="sw" role="tab" id="ttren" aria-selected="false" aria-controls="vtren">Perkembangan 2023–2025</button>
+  </div>
+
+  <section class="view show" id="v0" role="tabpanel" aria-labelledby="t0">
+    <div class="thumbs"><div class="th"><figure class="shot"><button class="zoom" type="button" data-go="2023" aria-label="Perbesar rapor 2023"><img src="rapor%202023.png" data-alt="rapor_2023.png" alt="Rapor Pendidikan 2023" onerror="imgFail(this)"><span class="miss">Letakkan <b>rapor 2023.png</b> di folder yang sama</span></button><figcaption>Rapor Pendidikan 2023</figcaption></figure></div><div class="th"><figure class="shot"><button class="zoom" type="button" data-go="2024" aria-label="Perbesar rapor 2024"><img src="rapor%202024.png" data-alt="rapor_2024.png" alt="Rapor Pendidikan 2024" onerror="imgFail(this)"><span class="miss">Letakkan <b>rapor 2024.png</b> di folder yang sama</span></button><figcaption>Rapor Pendidikan 2024</figcaption></figure></div><div class="th"><figure class="shot"><button class="zoom" type="button" data-go="2025" aria-label="Perbesar rapor 2025"><img src="rapor%202025.png" data-alt="rapor_2025.png" alt="Rapor Pendidikan 2025" onerror="imgFail(this)"><span class="miss">Letakkan <b>rapor 2025.png</b> di folder yang sama</span></button><figcaption>Rapor Pendidikan 2025</figcaption></figure></div></div>
+
+    <h2 class="sec">Perkembangan dari tahun ke tahun</h2>
+    <div class="two">
+      <div class="panel">
+        <h3>Jumlah indikator tiap kategori</h3>
+        <div class="bar"><b>2023</b><div class="stack"><span class="seg baik" style="flex:3">3</span><span class="seg sedang" style="flex:4">4</span><span class="seg kurang" style="flex:1">1</span></div></div><div class="bar"><b>2024</b><div class="stack"><span class="seg baik" style="flex:2">2</span><span class="seg sedang" style="flex:5">5</span><span class="seg kurang" style="flex:1">1</span></div></div><div class="bar"><b>2025</b><div class="stack"><span class="seg baik" style="flex:5">5</span><span class="seg sedang" style="flex:3">3</span></div></div>
+        <div class="legend"><i class="dot baik">Baik</i><i class="dot sedang">Sedang</i><i class="dot kurang">Kurang</i></div>
+        <p class="note-s">Dari delapan indikator pada setiap rapor.</p>
+      </div>
+      <div class="notes"><article class="note up"><h3>Komposisi membaik</h3><p>Indikator berkategori Baik berubah dari 3 (2023) menjadi 2 (2024) lalu 5 (2025). Indikator Kurang turun dari 1 menjadi 0.</p></article><article class="note best"><h3>Numerasi: lompatan terbesar</h3><p>Berkategori Kurang pada 2023 dan 2024, lalu mencapai Baik pada 2025 dengan peningkatan tertinggi.</p></article><article class="note up"><h3>Literasi, kebinekaan, dan penyerapan lulusan menguat</h3><p>Literasi naik dari Sedang ke Baik pada 2025. Kebinekaan Baik sejak 2024. Penyerapan Lulusan sempat turun ke Sedang pada 2024 lalu kembali Baik.</p></article><article class="note info"><h3>Keamanan sekolah stabil</h3><p>Berkategori Baik selama tiga tahun, dengan nilai turun pada 2023 dan 2024 lalu naik pada 2025.</p></article><article class="note warn"><h3>Perlu penguatan</h3><p>Karakter Murid turun dari Baik ke Sedang sejak 2024. Kualitas Pembelajaran Sedang selama tiga tahun meski nilainya naik tiap tahun. Keselarasan dengan Dunia Kerja Sedang selama tiga tahun dan turun pada 2025.</p></article></div>
+    </div>
+
+    <h2 class="sec">Jejak tiap indikator</h2>
+    <div class="panel">
+      <div class="mxbox"><div class="mx"><div class="mx-h"><span></span><b>2023</b><b>2024</b><b>2025</b></div><div class="mx-r"><span class="lab">Kemampuan Literasi</span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar down" title="Turun dari tahun sebelumnya">↓</em></span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span><span class="cell"><i class="dot baik">Baik</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span></div><div class="mx-r"><span class="lab">Kemampuan Numerasi</span><span class="cell"><i class="dot kurang">Kurang</i><em class="ar down" title="Turun dari tahun sebelumnya">↓</em></span><span class="cell"><i class="dot kurang">Kurang</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span><span class="cell"><i class="dot baik">Baik</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span></div><div class="mx-r"><span class="lab">Karakter Murid</span><span class="cell"><i class="dot baik">Baik</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar down" title="Turun dari tahun sebelumnya">↓</em></span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span></div><div class="mx-r"><span class="lab">Keamanan Sekolah</span><span class="cell"><i class="dot baik">Baik</i><em class="ar down" title="Turun dari tahun sebelumnya">↓</em></span><span class="cell"><i class="dot baik">Baik</i><em class="ar down" title="Turun dari tahun sebelumnya">↓</em></span><span class="cell"><i class="dot baik">Baik</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span></div><div class="mx-r"><span class="lab">Kebinekaan Sekolah</span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span><span class="cell"><i class="dot baik">Baik</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span><span class="cell"><i class="dot baik">Baik</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span></div><div class="mx-r"><span class="lab">Kualitas Pembelajaran</span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span></div><div class="mx-r"><span class="lab">Penyerapan Lulusan SMK</span><span class="cell"><i class="dot baik">Baik</i><em class="ar neu" title="Tidak ada pembanding">–</em></span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar down" title="Turun dari tahun sebelumnya">↓</em></span><span class="cell"><i class="dot baik">Baik</i><em class="ar up" title="Naik dari tahun sebelumnya">↑</em></span></div><div class="mx-r"><span class="lab">Keselarasan Dunia Kerja</span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar neu" title="Indikator baru">baru</em></span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar neu" title="Tidak ada pembanding">–</em></span><span class="cell"><i class="dot sedang">Sedang</i><em class="ar down" title="Turun dari tahun sebelumnya">↓</em></span></div></div></div>
+      <p class="keyline">Panah menunjukkan perubahan nilai dibanding tahun sebelumnya seperti tertulis pada rapor: ↑ naik, ↓ turun, – tidak ada pembanding.</p>
+    </div>
+  </section>
+
+  <section class="view" id="v2023" role="tabpanel" aria-labelledby="t2023" hidden>
+    <div class="yv"><figure class="shot"><button class="zoom" type="button" aria-label="Perbesar rapor 2023"><img src="rapor%202023.png" data-alt="rapor_2023.png" alt="Rapor Pendidikan 2023" onerror="imgFail(this)"><span class="miss">Letakkan <b>rapor 2023.png</b> di folder yang sama</span></button><figcaption>Rapor Pendidikan 2023</figcaption></figure><div class="desc"><h2>2023: titik awal, numerasi paling perlu ditingkatkan</h2><div class="counts"><i class="dot baik">3 Baik</i><i class="dot sedang">4 Sedang</i><i class="dot kurang">1 Kurang</i></div><div class="notes"><article class="note up"><h3>Naik dari 2022</h3><p>Karakter Murid (peningkatan paling tinggi), Kebinekaan Sekolah, dan Kualitas Pembelajaran.</p></article><article class="note down"><h3>Turun dari 2022</h3><p>Kemampuan Literasi, Keamanan Sekolah, dan Kemampuan Numerasi.</p></article><article class="note best"><h3>Capaian terbaik</h3><p>Penyerapan Lulusan SMK dengan kategori Baik.</p></article><article class="note warn"><h3>Paling perlu ditingkatkan</h3><p>Kemampuan Numerasi, satu-satunya indikator berkategori Kurang.</p></article><article class="note info"><h3>Catatan</h3><p>Penyerapan Lulusan belum punya pembanding 2022, dan Keselarasan dengan Dunia Kerja baru tersedia pada 2023.</p></article></div></div></div>
+  </section>
+  <section class="view" id="v2024" role="tabpanel" aria-labelledby="t2024" hidden>
+    <div class="yv"><figure class="shot"><button class="zoom" type="button" aria-label="Perbesar rapor 2024"><img src="rapor%202024.png" data-alt="rapor_2024.png" alt="Rapor Pendidikan 2024" onerror="imgFail(this)"><span class="miss">Letakkan <b>rapor 2024.png</b> di folder yang sama</span></button><figcaption>Rapor Pendidikan 2024</figcaption></figure><div class="desc"><h2>2024: literasi naik, karakter dan penyerapan lulusan turun</h2><div class="counts"><i class="dot baik">2 Baik</i><i class="dot sedang">5 Sedang</i><i class="dot kurang">1 Kurang</i></div><div class="notes"><article class="note up"><h3>Naik dari 2023</h3><p>Literasi (peningkatan paling tinggi), Kebinekaan (capaian terbaik), Numerasi, dan Kualitas Pembelajaran.</p></article><article class="note down"><h3>Turun dari 2023</h3><p>Karakter Murid dan Penyerapan Lulusan sama-sama turun dari Baik ke Sedang. Keamanan Sekolah turun nilainya tetapi tetap Baik.</p></article><article class="note warn"><h3>Paling perlu ditingkatkan</h3><p>Numerasi tetap berkategori Kurang walaupun nilainya sudah naik.</p></article><article class="note info"><h3>Catatan</h3><p>Alat ukur Keselarasan dengan Dunia Kerja berbeda dari tahun lalu, sehingga tidak dibandingkan.</p></article></div></div></div>
+  </section>
+  <section class="view" id="v2025" role="tabpanel" aria-labelledby="t2025" hidden>
+    <div class="yv"><figure class="shot"><button class="zoom" type="button" aria-label="Perbesar rapor 2025"><img src="rapor%202025.png" data-alt="rapor_2025.png" alt="Rapor Pendidikan 2025" onerror="imgFail(this)"><span class="miss">Letakkan <b>rapor 2025.png</b> di folder yang sama</span></button><figcaption>Rapor Pendidikan 2025</figcaption></figure><div class="desc"><h2>2025: lima indikator Baik, tidak ada lagi yang Kurang</h2><div class="counts"><i class="dot baik">5 Baik</i><i class="dot sedang">3 Sedang</i><i class="dot kurang">0 Kurang</i></div><div class="notes"><article class="note up"><h3>Naik dari 2024</h3><p>Tujuh indikator naik. Numerasi mencatat capaian dan peningkatan tertinggi (dari Kurang ke Baik), disusul Literasi dan Penyerapan Lulusan yang kembali Baik.</p></article><article class="note down"><h3>Turun dari 2024</h3><p>Hanya Keselarasan dengan Dunia Kerja yang turun, dan ditandai paling perlu ditingkatkan.</p></article><article class="note warn"><h3>Masih berkategori Sedang</h3><p>Karakter Murid, Kualitas Pembelajaran, dan Keselarasan dengan Dunia Kerja. Ketiganya sejalan dengan prioritas I sampai III pada RKT.</p></article></div></div></div>
+  </section>
+  <section class="view" id="vtren" role="tabpanel" aria-labelledby="ttren" hidden></section>
+</main>
+
+<div class="lb" id="lb" aria-hidden="true"><img id="lbimg" alt="Rapor Pendidikan diperbesar"></div>
+
+<a class="nav back" id="back" href="rkt.html" aria-label="Kembali ke halaman sebelumnya">
+  <svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c1" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+    <text><textPath href="#c1">BACK • SEBELUMNYA • BACK • SEBELUMNYA •</textPath></text></svg>
+  <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span>
+</a>
+
+<a class="nav next" id="next" href="kegiatan.html" aria-label="Lanjut ke halaman berikutnya">
+  <svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c2" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+    <text><textPath href="#c2">NEXT • SELANJUTNYA • NEXT • SELANJUTNYA •</textPath></text></svg>
+  <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+</a>
+
+<div class="bands enter" id="bands"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i></div>
+
+<script>
+  /* ===== tab Perkembangan 2023–2025 =====
+     k: kategori tiap tahun (b=Baik, s=Sedang, k=Kurang)
+     a: arah perubahan tertulis di rapor (u=naik, d=turun, n=tanpa pembanding)
+     SKOR: isi angka skor asli dari rapor bila ingin persentase berbasis skor (urutan 2023, 2024, 2025) */
+  const IND=[
+    {n:'Kemampuan Literasi',k:'ssb',a:'duu',st:['keep','Pertahankan'],skor:[null,null,null]},
+    {n:'Kemampuan Numerasi',k:'kkb',a:'duu',st:['best','Naik terbesar'],skor:[null,null,null]},
+    {n:'Karakter Murid',k:'bss',a:'udu',st:['fix','Perlu diperbaiki'],skor:[null,null,null]},
+    {n:'Keamanan Sekolah',k:'bbb',a:'ddu',st:['keep','Pertahankan'],skor:[null,null,null]},
+    {n:'Kebinekaan Sekolah',k:'sbb',a:'uuu',st:['keep','Pertahankan'],skor:[null,null,null]},
+    {n:'Kualitas Pembelajaran',k:'sss',a:'uuu',st:['fix','Perlu diperbaiki'],skor:[null,null,null]},
+    {n:'Penyerapan Lulusan SMK',k:'bsb',a:'ndu',st:['keep','Pertahankan'],skor:[null,null,null]},
+    {n:'Keselarasan Dunia Kerja',k:'sss',a:'nnd',st:['fix','Prioritas perbaikan'],skor:[null,null,null]}
+  ];
+  (function(){
+    const Y=[2023,2024,2025], R={b:3,s:2,k:1}, L={b:'Baik',s:'Sedang',k:'Kurang'}, C={b:'baik',s:'sedang',k:'kurang'};
+    const f=(x,d=1)=>x.toFixed(d).replace('.',','), sg=x=>(x>0?'+':'')+f(x);
+    const N=IND.length;
+    const cnt=y=>{const o={b:0,s:0,k:0};IND.forEach(i=>o[i.k[y]]++);return o};
+    const cs=Y.map((_,y)=>cnt(y));
+    const arr=Y.map((_,y)=>{let u=0,d=0,n=0;IND.forEach(i=>{const c=i.a[y];c==='u'?u++:c==='d'?d++:n++});return{u,d,n,t:u+d}});
+    const idx=Y.map((_,y)=>IND.reduce((t,i)=>t+R[i.k[y]],0)/N);
+    const ch=(a,b)=>(b-a)/a*100;
+    const baikP=cs.map(c=>c.b/N*100);
+    const ia=ch(idx[0],idx[1]), ib=ch(idx[1],idx[2]), it=ch(idx[0],idx[2]);
+    const cls=x=>x>0?'up':x<0?'down':'neu', ar=x=>x>0?'↑':x<0?'↓':'–';
+    const dot=c=>`<i class="dot ${C[c]}">${L[c]}</i>`;
+
+    const rows=IND.map(i=>{
+      const d=R[i.k[2]]-R[i.k[0]], t=d>0?'Naik kategori':d<0?'Turun kategori':'Tetap';
+      const sk=i.skor.every(v=>typeof v==='number');
+      const cell=y=>`<span class="cell">${dot(i.k[y])}${sk?`<small>${f(i.skor[y],2)}</small>`:`<small>${({u:'↑ naik',d:'↓ turun',n:'–'})[i.a[y]]}</small>`}</span>`;
+      const tr=sk?`${sg(ch(i.skor[0],i.skor[2]))}%`:t;
+      const tc=sk?cls(i.skor[2]-i.skor[0]):cls(d);
+      return `<div class="tr-r"><span class="lab">${i.n}</span>${cell(0)}${cell(1)}${cell(2)}<span class="trend ${tc}">${tr}</span><span class="tag ${i.st[0]}">${i.st[1]}</span></div>`;
+    }).join('');
+
+    const allSk=IND.every(i=>i.skor.every(v=>typeof v==='number'));
+    let skorPanel='';
+    if(allSk){
+      const av=Y.map((_,y)=>IND.reduce((t,i)=>t+i.skor[y],0)/N);
+      skorPanel=`<h2 class="sec">Persentase berbasis skor</h2><div class="kpis"><div class="kpi"><small>2023 → 2024</small><strong class="${cls(av[1]-av[0])}">${sg(ch(av[0],av[1]))}%</strong><span>Rata-rata ${f(av[0],2)} → ${f(av[1],2)}</span></div><div class="kpi"><small>2024 → 2025</small><strong class="${cls(av[2]-av[1])}">${sg(ch(av[1],av[2]))}%</strong><span>Rata-rata ${f(av[1],2)} → ${f(av[2],2)}</span></div><div class="kpi"><small>2023 → 2025</small><strong class="${cls(av[2]-av[0])}">${sg(ch(av[0],av[2]))}%</strong><span>Rata-rata seluruh indikator</span></div></div>`;
+    }
+
+    const verdict=it>=0?'naik':'turun';
+    document.getElementById('vtren').innerHTML=`
+      <h2>Secara keseluruhan ${verdict} ${f(Math.abs(it))}% sejak 2023</h2>
+      <p class="sub" style="margin:10px 0 22px">Dihitung dari kategori dan arah perubahan pada rapor. Setelah turun pada 2024, 2025 naik tajam.</p>
+      <div class="kpis">
+        <div class="kpi"><small>Indikator Baik: 2023 → 2025</small><strong class="${cls(baikP[2]-baikP[0])}">${f(baikP[0])}% → ${f(baikP[2])}%</strong><span>${sg(baikP[2]-baikP[0])} poin persentase (${cs[0].b} menjadi ${cs[2].b} dari ${N} indikator).</span></div>
+        <div class="kpi"><small>Indeks kategori 2023 → 2025</small><strong class="${cls(it)}">${sg(it)}%</strong><span>2023→2024 ${sg(ia)}%, 2024→2025 ${sg(ib)}%. Indeks: Baik=3, Sedang=2, Kurang=1, dirata-rata.</span></div>
+        <div class="kpi"><small>Indikator naik pada 2025</small><strong class="up">${f(arr[2].u/arr[2].t*100)}%</strong><span>${arr[2].u} dari ${arr[2].t} indikator naik, ${arr[2].d} turun (2024: ${f(arr[1].u/arr[1].t*100)}% naik).</span></div>
+      </div>
+      <div class="two">
+        <div class="panel"><h3>Persentase indikator berkategori Baik</h3>
+          ${Y.map((y,i)=>`<div class="pbar"><b>${y}</b><div class="track"><div class="fill" style="width:${baikP[i]}%"></div></div><em>${f(baikP[i])}%</em></div>`).join('')}
+          <h3 style="margin-top:22px">Indikator naik dan turun</h3>
+          ${Y.map((y,i)=>`<div class="bar"><b>${y}</b><div class="stack"><span class="seg baik" style="flex:${arr[i].u||.001}">${arr[i].u||''}</span><span class="seg kurang" style="flex:${arr[i].d||.001}">${arr[i].d||''}</span>${arr[i].n?`<span class="seg" style="--c:#6b8a8d;flex:${arr[i].n}">${arr[i].n}</span>`:''}</div></div>`).join('')}
+          <div class="legend"><i class="dot baik">Naik</i><i class="dot kurang">Turun</i><i class="dot" style="--c:#6b8a8d">Tanpa pembanding</i></div>
+          <p class="note-s">Perubahan 2023 dibanding 2022, 2024 dibanding 2023, 2025 dibanding 2024.</p></div>
+        <div class="notes">
+          <article class="note up"><h3>Meningkat</h3><p>Numerasi naik dari Kurang ke Baik (peningkatan terbesar). Literasi dan Kebinekaan naik dari Sedang ke Baik. Penyerapan Lulusan kembali Baik pada 2025.</p></article>
+          <article class="note down"><h3>Perlu diperbaiki</h3><p><b>Keselarasan Dunia Kerja</b>: Sedang tiga tahun dan turun pada 2025 (prioritas). <b>Karakter Murid</b>: turun dari Baik ke Sedang sejak 2024. <b>Kualitas Pembelajaran</b>: masih Sedang meski nilainya naik tiap tahun.</p></article>
+          <article class="note warn"><h3>Perlu dijaga</h3><p>Penyerapan Lulusan sempat turun pada 2024, dan Keamanan Sekolah turun pada 2023 dan 2024 sebelum naik lagi. Jangan sampai berbalik arah.</p></article>
+          <article class="note best"><h3>Strategi tindak lanjut 2026</h3><p>Fokus pertama pada <b>Keselarasan Dunia Kerja</b>: perkuat kemitraan dengan DUDI, program magang atau PKL yang sesuai kompetensi keahlian, guru tamu dari industri, dan penyesuaian kurikulum dengan kebutuhan kerja. Kedua, <b>Kualitas Pembelajaran</b>: supervisi dan refleksi guru secara rutin, pembelajaran berdiferensiasi, serta komunitas belajar antarguru. Ketiga, pulihkan <b>Karakter Murid</b> lewat penguatan Profil Pelajar Pancasila, pembiasaan tata tertib, dan pembinaan wali kelas serta BK. Pertahankan capaian Numerasi dan Literasi dengan asesmen berkala dan pendampingan murid yang masih rendah. Jaga Keamanan Sekolah dan Penyerapan Lulusan, lalu pantau kemajuan tiap semester agar hasil Rapor Pendidikan 2026 lebih baik.</p></article>
+        </div>
+      </div>
+      ${skorPanel}
+      <h2 class="sec">Naik, turun, dan prioritas per indikator</h2>
+      <div class="panel"><div class="mxbox"><div class="mx" style="min-width:760px">
+        <div class="tr-h"><span></span><b>2023</b><b>2024</b><b>2025</b><b>Tren</b><b>Status</b></div>${rows}
+      </div></div><p class="keyline">Tren membandingkan kategori 2023 dengan 2025. Keselarasan Dunia Kerja tidak dibandingkan pada 2024 karena alat ukur berbeda.</p></div>`;
+  })();
+</script>
+<script>
+  /* gambar: coba "rapor 2023.png", lalu "rapor_2023.png" */
+  function imgFail(img){
+    if(!img.dataset.tried && img.dataset.alt){ img.dataset.tried = 1; img.src = img.dataset.alt; }
+    else img.parentNode.classList.add('empty');
+  }
+
+  /* pilih tampilan */
+  const sws = [...document.querySelectorAll('.sw')];
+  const views = [...document.querySelectorAll('.view')];
+  let cur = 0;
+  function pick(n){
+    cur = (n + sws.length) % sws.length;
+    sws.forEach((b,i)=> b.setAttribute('aria-selected', i===cur));
+    views.forEach((v,i)=>{ v.hidden = i!==cur; v.classList.toggle('show', i===cur); });
+  }
+  sws.forEach((b,i)=> b.addEventListener('click', ()=>pick(i)));
+  document.querySelectorAll('[data-go]').forEach(b=> b.addEventListener('click', e=>{
+    e.stopPropagation(); pick(1 + [2023,2024,2025].indexOf(+b.dataset.go)); scrollTo({top:0,behavior:'smooth'});
+  }));
+
+  /* perbesar gambar (hanya di tampilan per tahun) */
+  const lb = document.getElementById('lb'), lbimg = document.getElementById('lbimg');
+  document.querySelectorAll('.yv .zoom').forEach(b=> b.addEventListener('click', ()=>{
+    const im = b.querySelector('img'); if(b.classList.contains('empty')) return;
+    lbimg.src = im.currentSrc || im.src; lb.classList.add('open');
+  }));
+  const closeLb = ()=> lb.classList.remove('open');
+  lb.addEventListener('click', closeLb);
+
+  /* transisi halaman */
+  const bands = document.getElementById('bands');
+  bands.lastElementChild.addEventListener('animationend', ()=> bands.classList.remove('enter'));
+  function go(id){
+    const a = document.getElementById(id);
+    bands.classList.remove('enter');
+    bands.getBoundingClientRect();
+    bands.classList.add('go');
+    setTimeout(()=>{ location.href = a.getAttribute('href'); }, 850);
+  }
+  ['back','next'].forEach(id=>{
+    document.getElementById(id).addEventListener('click', e=>{ e.preventDefault(); go(id); });
+  });
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape') closeLb();
+    if(lb.classList.contains('open')) return;
+    if(e.key==='ArrowRight') go('next');
+    if(e.key==='ArrowLeft')  go('back');
+    if(e.key==='ArrowDown'){ e.preventDefault(); pick(cur+1); }
+    if(e.key==='ArrowUp'){ e.preventDefault(); pick(cur-1); }
+  });
+</script>
+</body>
+</html>

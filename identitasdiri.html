@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Identitas Diri Kepala Sekolah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E3B43; --bg2:#0A2C33; --gold:#F0B429; --paper:#F4F7F6; --muted:#A9C4C6;
+    --line:rgba(244,247,246,.16);
+    --display:'Bricolage Grotesque','Trebuchet MS',Arial,sans-serif;
+    --body:'Figtree','Segoe UI',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{min-height:100%}
+  body{
+    font-family:var(--body);color:var(--paper);overflow-x:hidden;
+    background:
+      linear-gradient(rgba(10,44,51,.72),rgba(10,44,51,.72)),
+      url('bg.png') center/cover no-repeat fixed,
+      radial-gradient(1200px 700px at 85% 20%,#14525c 0%,var(--bg) 45%,var(--bg2) 100%);
+  }
+  .logo{
+    position:fixed;top:clamp(14px,2vw,28px);right:clamp(16px,3vw,48px);z-index:5;
+    height:clamp(44px,5.5vw,76px);width:auto;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));
+  }
+
+  .slide{
+    min-height:100vh;max-width:1440px;margin:auto;
+    padding:clamp(24px,4vw,64px) clamp(20px,5vw,80px) 170px;
+    display:grid;grid-template-columns:300px 1fr 1fr;gap:clamp(24px,3.5vw,56px);align-items:start;
+  }
+  h1{
+    grid-column:1/-1;font-family:var(--display);font-weight:800;letter-spacing:-.02em;
+    font-size:clamp(34px,5vw,68px);line-height:1;
+    padding-bottom:18px;border-bottom:3px solid var(--gold);width:max-content;max-width:100%;
+  }
+
+  /* kolom foto */
+  .who{text-align:center}
+  .photo{position:relative;width:100%;max-width:280px;aspect-ratio:3/4;margin:0 auto 22px}
+  .photo::before{content:"";position:absolute;inset:0;transform:translate(12px,12px);
+    border:3px solid var(--gold);border-radius:999px 999px 22px 22px}
+  .frame{position:relative;width:100%;height:100%;overflow:hidden;background:#1b5560;border-radius:999px 999px 22px 22px}
+  .frame img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+  .frame .ph{position:absolute;inset:0;display:none;place-items:center;padding:20px;color:var(--muted);font-size:13px}
+  .frame.empty .ph{display:grid} .frame.empty img{display:none}
+  .who h2{font-family:var(--display);font-size:clamp(18px,1.7vw,24px);line-height:1.25}
+  .who p{color:var(--gold);font-weight:600;margin-top:6px;font-size:15px}
+
+  /* panel */
+  .panel h3{font-family:var(--display);font-size:20px;margin-bottom:14px;color:var(--gold)}
+  dl{display:grid;grid-template-columns:minmax(120px,38%) 1fr;font-size:clamp(14px,1.15vw,16.5px);line-height:1.45}
+  dt,dd{padding:10px 0;border-bottom:1px solid var(--line)}
+  dt{color:var(--muted)}
+  dd{font-weight:600}
+  .isi{border-bottom:1.5px dashed var(--gold);color:var(--muted);font-weight:400}
+
+  /* riwayat pendidikan: garis waktu */
+  .tl{list-style:none;padding:0;margin:0;border-left:3px solid var(--gold);margin-left:6px}
+  .tl li{position:relative;padding:0 0 22px 24px}
+  .tl li::before{content:"";position:absolute;left:-10px;top:4px;width:17px;height:17px;border-radius:50%;
+    background:var(--bg2);border:3px solid var(--gold)}
+  .tl .th{font-family:var(--display);font-weight:700;font-size:15px;color:var(--gold)}
+  .tl .nm{font-weight:600;font-size:16px;margin:2px 0}
+  .tl .jr{color:var(--muted);font-size:14px}
+
+  /* tombol navigasi */
+  .nav{position:fixed;bottom:clamp(14px,2.5vw,40px);width:112px;height:112px;border:0;background:none;color:var(--paper);
+    text-decoration:none;display:grid;place-items:center;cursor:pointer;z-index:6}
+  .nav.next{right:clamp(14px,3vw,48px)} .nav.back{left:clamp(14px,3vw,48px)}
+  .nav svg.ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 14s linear infinite}
+  .nav.back svg.ring{animation-direction:reverse}
+  .nav text{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.16em;fill:var(--paper)}
+  .nav .core{width:54px;height:54px;border-radius:50%;background:var(--gold);color:var(--bg2);display:grid;place-items:center;
+    transition:width .25s,height .25s}
+  .nav .core svg{width:24px;height:24px;transition:transform .3s}
+  .nav:hover .core,.nav:focus-visible .core{width:66px;height:66px}
+  .nav.next:hover .core svg{transform:translateX(5px)} .nav.back:hover .core svg{transform:translateX(-5px)}
+  .nav:hover svg.ring{animation-duration:4s}
+  .nav:focus-visible{outline:3px solid var(--gold);outline-offset:4px;border-radius:50%}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* transisi: lingkaran emas membesar dari tombol yang diklik */
+  .wipe{position:fixed;inset:0;background:var(--gold);pointer-events:none;z-index:10;
+    clip-path:circle(0 at var(--x,50%) var(--y,50%))}
+  .wipe.go{clip-path:circle(150vmax at var(--x,50%) var(--y,50%));transition:clip-path .75s cubic-bezier(.6,0,.3,1)}
+  .wipe.enter{animation:circleOut .7s cubic-bezier(.6,0,.3,1) both}
+  @keyframes circleOut{from{clip-path:circle(150vmax at 50% 50%)}to{clip-path:circle(0 at 50% 50%)}}
+
+  @media (max-width:1080px){
+    .slide{grid-template-columns:260px 1fr}
+    .panel.edu{grid-column:1/-1}
+  }
+  @media (max-width:720px){
+    .slide{grid-template-columns:1fr;padding-top:96px}
+    h1{width:auto}
+    dl{grid-template-columns:1fr 1.4fr}
+  }
+  @media (prefers-reduced-motion:reduce){.nav svg.ring{animation:none}.wipe.go{transition:none}.wipe.enter{animation:none}}
+</style>
+</head>
+<body>
+
+<img class="logo" src="logosekolah.png" alt="Logo sekolah" onerror="this.style.display='none'">
+
+<main class="slide">
+  <h1>Identitas Diri</h1>
+
+  <section class="who">
+    <div class="photo">
+      <div class="frame" id="frame">
+        <img src="photokepsek.png" alt="Foto Kepala Sekolah" onerror="document.getElementById('frame').classList.add('empty')">
+        <div class="ph">Letakkan <b>photokepsek.png</b> di folder yang sama</div>
+      </div>
+    </div>
+    <h2>Hasdiah, S.Pd., M.M.</h2>
+    <p>Kepala Sekolah</p>
+  </section>
+
+  <section class="panel">
+    <h3>Data pribadi</h3>
+    <dl>
+      <dt>Nama lengkap</dt><dd>Hasdiah, S.Pd., M.M.</dd>
+      <dt>NIP</dt><dd>197709262008042001</dd>
+      <dt>Pangkat/Golongan</dt><dd>Penata Tk.I/IIID</dd>
+      <dt>TMT golongan</dt><dd>01-08-2009</dd>
+      <dt>Tempat/Tgl lahir</dt><dd>Muntok, 26-07-1977</dd>
+      <dt>Jenis kelamin</dt><dd>Perempuan</dd>
+      <dt>Agama</dt><dd>Islam</dd>
+      <dt>Alamat</dt><dd>Jl. Daya Baru RT.02/RW.--, Kelurahan Belo Laut, Kecamatan Mentok, Kabupaten Bangka Barat</dd>
+      <dt>Pendidikan terakhir</dt><dd>S2 Manajemen</dd>
+      <dt>Jabatan sekarang</dt><dd>Kepala Sekolah SMK Negeri 1 Simpang Teritip</dd>
+    </dl>
+  </section>
+
+  <section class="panel edu">
+    <h3>Riwayat pendidikan</h3>
+    <ol class="tl">
+      <li><div class="th">SD &middot; 1989</div><div class="nm">SD Muhammadiyah Mentok</div></li>
+      <li><div class="th">SMP &middot; 1992</div><div class="nm">SMPN 2 Mentok</div></li>
+      <li><div class="th">SMA &middot; 1995</div><div class="nm">SMAN 1 Mentok</div></li>
+      <li><div class="th">D3 &middot; 1999</div><div class="nm">Akademi Bahasa Asing</div></li>
+      <li><div class="th">S1 &middot; 2007</div><div class="nm">Universitas Terbuka</div><div class="jr">Pendidikan Bahasa Inggris</div></li>
+      <li><div class="th">S2 &middot; 2024</div><div class="nm">Universitas Terbuka</div><div class="jr">Manajemen</div></li>
+    </ol>
+  </section>
+</main>
+
+<a class="nav back" id="back" href="index.html" aria-label="Kembali ke halaman sebelumnya">
+  <svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c1" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+    <text><textPath href="#c1">BACK • SEBELUMNYA • BACK • SEBELUMNYA •</textPath></text></svg>
+  <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span>
+</a>
+
+<a class="nav next" id="next" href="visimisi.html" aria-label="Lanjut ke halaman berikutnya">
+  <svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c2" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+    <text><textPath href="#c2">NEXT • SELANJUTNYA • NEXT • SELANJUTNYA •</textPath></text></svg>
+  <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+</a>
+
+<div class="wipe enter" id="wipe"></div>
+
+<script>
+  const wipe = document.getElementById('wipe');
+  wipe.addEventListener('animationend', ()=> wipe.classList.remove('enter'));
+  function go(id){
+    const a = document.getElementById(id);
+    const r = a.getBoundingClientRect();
+    wipe.classList.remove('enter');
+    wipe.style.setProperty('--x', (r.left + r.width/2) + 'px');
+    wipe.style.setProperty('--y', (r.top + r.height/2) + 'px');
+    wipe.getBoundingClientRect();
+    wipe.classList.add('go');
+    setTimeout(()=>{ location.href = a.getAttribute('href'); }, 780);
+  }
+  ['back','next'].forEach(id=>{
+    document.getElementById(id).addEventListener('click', e=>{ e.preventDefault(); go(id); });
+  });
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight') go('next');
+    if(e.key==='ArrowLeft')  go('back');
+  });
+</script>
+</body>
+</html>

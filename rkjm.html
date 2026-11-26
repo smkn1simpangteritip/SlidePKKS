@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rencana Kerja Jangka Menengah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E3B43; --bg2:#0A2C33; --gold:#F0B429; --paper:#F4F7F6; --muted:#A9C4C6;
+    --line:rgba(244,247,246,.16);
+    --display:'Bricolage Grotesque','Trebuchet MS',Arial,sans-serif;
+    --body:'Figtree','Segoe UI',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{min-height:100%}
+  body{
+    font-family:var(--body);color:var(--paper);overflow-x:hidden;
+    background:
+      linear-gradient(rgba(10,44,51,.72),rgba(10,44,51,.72)),
+      url('bg.png') center/cover no-repeat fixed,
+      radial-gradient(1200px 700px at 85% 20%,#14525c 0%,var(--bg) 45%,var(--bg2) 100%);
+  }
+  .logo{position:fixed;top:clamp(14px,2vw,28px);right:clamp(16px,3vw,48px);z-index:5;
+    height:clamp(44px,5.5vw,76px);width:auto;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+
+  .slide{min-height:100vh;max-width:1440px;margin:auto;
+    padding:clamp(24px,4vw,64px) clamp(20px,5vw,80px) 170px;
+    display:grid;grid-template-columns:290px minmax(0,1fr);gap:clamp(24px,3.5vw,56px);align-items:start}
+  h1{grid-column:1/-1;font-family:var(--display);font-weight:800;letter-spacing:-.02em;
+    font-size:clamp(30px,4.6vw,64px);line-height:1.05;padding-bottom:18px;border-bottom:3px solid var(--gold);
+    width:max-content;max-width:100%}
+  .sub{grid-column:1/-1;color:var(--muted);margin-top:-18px;font-size:clamp(14px,1.2vw,17px);
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+  .period{background:var(--gold);color:var(--bg2);font:800 clamp(14px,1.3vw,19px) var(--display);
+    padding:6px 18px;border-radius:999px}
+
+  /* daftar standar */
+  .tabs{display:flex;flex-direction:column;gap:8px;position:sticky;top:24px}
+  .tab{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;
+    font:600 clamp(14px,1.2vw,16.5px)/1.2 var(--body);color:var(--paper);
+    background:rgba(10,44,51,.55);border:2px solid var(--line);border-radius:999px;padding:8px 18px 8px 8px;
+    transition:background .2s,border-color .2s,transform .2s}
+  .tab b{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+    background:var(--c,rgba(244,247,246,.12));font-family:var(--display);font-weight:800}
+  .tab:hover{border-color:var(--gold);transform:translateX(4px)}
+  .tab[aria-selected="true"]{background:var(--gold);color:var(--bg2);border-color:var(--gold);transform:translateX(10px)}
+  .tab[aria-selected="true"] b{background:var(--bg2);color:var(--gold)}
+  .tab:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+  /* panel detail */
+  .stage{background:var(--stage,#0F4F5A);transition:background .45s ease;border-left:6px solid var(--gold);border-radius:4px 28px 28px 4px;
+    padding:clamp(20px,2.8vw,40px);min-height:420px}
+  .detail[hidden]{display:none}
+  .detail.show{animation:rise .35s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .detail header{display:flex;align-items:center;gap:16px;margin-bottom:30px}
+  .num{flex:none;width:clamp(46px,5vw,64px);height:clamp(46px,5vw,64px);border-radius:50%;display:grid;place-items:center;
+    background:var(--gold);color:var(--bg2);font:800 clamp(22px,2.6vw,32px) var(--display)}
+  .detail h2{font:800 clamp(22px,2.8vw,40px)/1.1 var(--display);letter-spacing:-.01em}
+
+  .flow{list-style:none;padding:0}
+  .flow li{position:relative;display:grid;grid-template-columns:52px 1fr;gap:18px;padding-bottom:30px}
+  .flow li:last-child{padding-bottom:0}
+  .flow li:not(:last-child)::after{content:"";position:absolute;left:25px;top:56px;bottom:4px;width:2px;background:var(--gold);opacity:.45}
+  .node{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--bg2);
+    border:2px solid var(--gold);color:var(--gold)}
+  .node svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .flow h3{font:700 15px var(--body);color:var(--muted);margin:4px 0 10px}
+  .cond{font:600 clamp(18px,1.9vw,26px)/1.35 var(--display)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:7px 16px;border-radius:999px;border:2px solid var(--line);font-weight:600;font-size:clamp(14px,1.2vw,17px)}
+  .chip.gold{background:var(--gold);border-color:var(--gold);color:var(--bg2)}
+
+  /* tombol navigasi */
+  .nav{position:fixed;bottom:clamp(14px,2.5vw,40px);width:112px;height:112px;border:0;background:none;color:var(--paper);
+    text-decoration:none;display:grid;place-items:center;cursor:pointer;z-index:6}
+  .nav.next{right:clamp(14px,3vw,48px)} .nav.back{left:clamp(14px,3vw,48px)}
+  .nav svg.ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 14s linear infinite}
+  .nav.back svg.ring{animation-direction:reverse}
+  .nav text{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.16em;fill:var(--paper)}
+  .nav .core{width:54px;height:54px;border-radius:50%;background:var(--gold);color:var(--bg2);display:grid;place-items:center;
+    transition:width .25s,height .25s}
+  .nav .core svg{width:24px;height:24px;transition:transform .3s}
+  .nav:hover .core,.nav:focus-visible .core{width:66px;height:66px}
+  .nav.next:hover .core svg{transform:translateX(5px)} .nav.back:hover .core svg{transform:translateX(-5px)}
+  .nav:hover svg.ring{animation-duration:4s}
+  .nav:focus-visible{outline:3px solid var(--gold);outline-offset:4px;border-radius:50%}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* transisi: dua pintu menutup dari kiri dan kanan */
+  .doors{position:fixed;inset:0;pointer-events:none;z-index:10}
+  .doors i{position:absolute;top:0;bottom:0;width:50.5%;transition:transform .6s cubic-bezier(.7,0,.3,1)}
+  .doors .l{left:0;background:var(--gold);transform:translateX(-100%)}
+  .doors .r{right:0;background:#14525c;transform:translateX(100%)}
+  .doors.go .l,.doors.go .r{transform:none}
+  .doors.enter .l{transform:none;animation:openL .65s cubic-bezier(.7,0,.3,1) .1s both}
+  .doors.enter .r{transform:none;animation:openR .65s cubic-bezier(.7,0,.3,1) .1s both}
+  @keyframes openL{to{transform:translateX(-100%)}}
+  @keyframes openR{to{transform:translateX(100%)}}
+
+  @media (max-width:900px){
+    .slide{grid-template-columns:1fr;padding-top:96px}
+    .tabs{position:static;flex-direction:row;overflow-x:auto;padding-bottom:8px}
+    .tab{width:auto;flex:none;white-space:nowrap}
+    .tab:hover,.tab[aria-selected="true"]{transform:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .nav svg.ring{animation:none}.detail.show{animation:none}
+    .doors i{transition:none!important;animation:none!important}
+  }
+
+  /* kartu strategi */
+  .strat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .strat .s{background:rgba(244,247,246,.07);border-left:4px solid var(--gold);border-radius:4px 14px 14px 4px;padding:12px 16px}
+  .strat .s:last-child:nth-child(odd){grid-column:1/-1}
+  .strat h4{font:700 clamp(15px,1.3vw,18px)/1.25 var(--display);margin-bottom:5px}
+  .strat p{font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;color:#D3E2E2}
+  @media (max-width:700px){.strat{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<img class="logo" src="logosekolah.png" alt="Logo sekolah" onerror="this.style.display='none'">
+
+<main class="slide">
+  <h1>Rencana Kerja Jangka Menengah</h1>
+  <div class="sub">
+    <span class="period">Target waktu 2026–2030</span>
+    <span>Delapan standar: fokus, kondisi saat ini, dan strategi</span>
+  </div>
+
+  <nav class="tabs" role="tablist" aria-label="Daftar standar">
+      <button class="tab" role="tab" id="t1" aria-selected="true" aria-controls="d1" data-i="1"><b>1</b><span>Kompetensi Lulusan</span></button>
+      <button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="d2" data-i="2"><b>2</b><span>Isi</span></button>
+      <button class="tab" role="tab" id="t3" aria-selected="false" aria-controls="d3" data-i="3"><b>3</b><span>Proses</span></button>
+      <button class="tab" role="tab" id="t4" aria-selected="false" aria-controls="d4" data-i="4"><b>4</b><span>Penilaian</span></button>
+      <button class="tab" role="tab" id="t5" aria-selected="false" aria-controls="d5" data-i="5"><b>5</b><span>PTK</span></button>
+      <button class="tab" role="tab" id="t6" aria-selected="false" aria-controls="d6" data-i="6"><b>6</b><span>Sarpras</span></button>
+      <button class="tab" role="tab" id="t7" aria-selected="false" aria-controls="d7" data-i="7"><b>7</b><span>Pengelolaan</span></button>
+      <button class="tab" role="tab" id="t8" aria-selected="false" aria-controls="d8" data-i="8"><b>8</b><span>Pembiayaan</span></button>
+  </nav>
+
+  <section class="stage">
+    <article class="detail show" id="d1" role="tabpanel" aria-labelledby="t1">
+      <header><span class="num">1</span><h2>Standar Kompetensi Lulusan</h2></header>
+      <ol class="flow">
+        <li><span class="node"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+          <div><h3>Fokus</h3><div class="chips"><span class="chip">Literasi</span><span class="chip">Numerasi</span><span class="chip">Karakter</span><span class="chip">Penyerapan</span></div></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 20v-7M12 20V4M19 20v-10"/></svg></span>
+          <div><h3>Kondisi saat ini</h3><p class="cond">Hasil belajar sudah membaik, karakter perlu penguatan</p></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4l13 4-13 5"/></svg></span>
+          <div><h3>Strategi</h3><div class="strat"><div class="s"><h4>Kompetensi lulusan</h4><p>Meningkatkan penguasaan pengetahuan dan keterampilan kejuruan lulusan sesuai standar kompetensi dan kebutuhan dunia kerja.</p></div><div class="s"><h4>Karakter</h4><p>Menguatkan iman dan takwa, disiplin, tanggung jawab, serta etos kerja melalui pembiasaan dan keteladanan di sekolah maupun tempat praktik.</p></div><div class="s"><h4>Sertifikasi</h4><p>Memfasilitasi uji kompetensi dan sertifikasi profesi bagi murid agar kemampuannya diakui secara resmi oleh industri.</p></div><div class="s"><h4>Penempatan</h4><p>Menyalurkan lulusan ke dunia kerja, wirausaha, dan pendidikan lanjutan melalui kerja sama dengan DUDI serta penelusuran lulusan.</p></div></div></div></li>
+      </ol>
+    </article>
+    <article class="detail" id="d2" role="tabpanel" aria-labelledby="t2" hidden>
+      <header><span class="num">2</span><h2>Standar Isi</h2></header>
+      <ol class="flow">
+        <li><span class="node"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+          <div><h3>Fokus</h3><div class="chips"><span class="chip">Kurikulum dan keselarasan DUDI</span></div></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 20v-7M12 20V4M19 20v-10"/></svg></span>
+          <div><h3>Kondisi saat ini</h3><p class="cond">Sinkronisasi perlu lebih konsisten</p></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4l13 4-13 5"/></svg></span>
+          <div><h3>Strategi</h3><div class="strat"><div class="s"><h4>Review KSP minimal tahunan</h4><p>Meninjau Kurikulum Satuan Pendidikan (KSP) paling sedikit setahun sekali agar tetap sesuai perkembangan teknologi dan kebutuhan murid.</p></div><div class="s"><h4>Sinkronisasi industri</h4><p>Menyelaraskan muatan kurikulum, kompetensi, dan perangkat ajar dengan kebutuhan DUDI melalui masukan dan kolaborasi mitra industri.</p></div></div></div></li>
+      </ol>
+    </article>
+    <article class="detail" id="d3" role="tabpanel" aria-labelledby="t3" hidden>
+      <header><span class="num">3</span><h2>Standar Proses</h2></header>
+      <ol class="flow">
+        <li><span class="node"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+          <div><h3>Fokus</h3><div class="chips"><span class="chip">Kualitas pembelajaran</span></div></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 20v-7M12 20V4M19 20v-10"/></svg></span>
+          <div><h3>Kondisi saat ini</h3><p class="cond">Masih sedang</p></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4l13 4-13 5"/></svg></span>
+          <div><h3>Strategi</h3><div class="strat"><div class="s"><h4>Supervisi</h4><p>Melaksanakan supervisi akademik secara berkala disertai umpan balik yang jelas untuk memperbaiki praktik mengajar guru.</p></div><div class="s"><h4>Coaching</h4><p>Mendampingi guru melalui coaching dan refleksi bersama rekan sejawat agar kualitas pembelajaran terus berkembang.</p></div><div class="s"><h4>Pembelajaran berdiferensiasi</h4><p>Menyesuaikan strategi, materi, dan penilaian dengan kebutuhan, minat, dan kesiapan belajar setiap murid.</p></div><div class="s"><h4>Proyek/kontekstual</h4><p>Menerapkan pembelajaran berbasis proyek dan masalah nyata yang berkaitan dengan dunia kerja dan lingkungan sekitar.</p></div></div></div></li>
+      </ol>
+    </article>
+    <article class="detail" id="d4" role="tabpanel" aria-labelledby="t4" hidden>
+      <header><span class="num">4</span><h2>Standar Penilaian</h2></header>
+      <ol class="flow">
+        <li><span class="node"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+          <div><h3>Fokus</h3><div class="chips"><span class="chip">Asesmen dan tindak lanjut</span></div></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 20v-7M12 20V4M19 20v-10"/></svg></span>
+          <div><h3>Kondisi saat ini</h3><p class="cond">Pemanfaatan data asesmen perlu diperkuat</p></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4l13 4-13 5"/></svg></span>
+          <div><h3>Strategi</h3><div class="strat"><div class="s"><h4>Asesmen diagnostik-formatif-sumatif</h4><p>Menjalankan asesmen secara utuh: diagnostik untuk memetakan kemampuan awal, formatif selama proses belajar, dan sumatif untuk mengukur capaian akhir.</p></div><div class="s"><h4>Remedial/pengayaan</h4><p>Menindaklanjuti hasil asesmen dengan remedial bagi murid yang belum tuntas dan pengayaan bagi murid yang sudah melampaui target.</p></div></div></div></li>
+      </ol>
+    </article>
+    <article class="detail" id="d5" role="tabpanel" aria-labelledby="t5" hidden>
+      <header><span class="num">5</span><h2>Standar PTK</h2></header>
+      <ol class="flow">
+        <li><span class="node"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+          <div><h3>Fokus</h3><div class="chips"><span class="chip">Kompetensi pedagogik/profesional/industri</span></div></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 20v-7M12 20V4M19 20v-10"/></svg></span>
+          <div><h3>Kondisi saat ini</h3><p class="cond">Perlu pengembangan berkelanjutan</p></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4l13 4-13 5"/></svg></span>
+          <div><h3>Strategi</h3><div class="strat"><div class="s"><h4>PKB</h4><p>Pengembangan Keprofesian Berkelanjutan: memberi pendidik dan tenaga kependidikan kesempatan pelatihan serta pengembangan diri secara terus-menerus.</p></div><div class="s"><h4>Magang industri</h4><p>Mengirim guru produktif magang di industri agar keterampilan dan pengetahuannya selaras dengan praktik terbaru.</p></div><div class="s"><h4>Sertifikasi</h4><p>Mendorong sertifikasi kompetensi dan profesi bagi pendidik dan tenaga kependidikan.</p></div><div class="s"><h4>Komunitas belajar</h4><p>Membangun komunitas belajar di sekolah untuk berbagi praktik baik, berdiskusi, dan saling belajar.</p></div></div></div></li>
+      </ol>
+    </article>
+    <article class="detail" id="d6" role="tabpanel" aria-labelledby="t6" hidden>
+      <header><span class="num">6</span><h2>Standar Sarpras</h2></header>
+      <ol class="flow">
+        <li><span class="node"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+          <div><h3>Fokus</h3><div class="chips"><span class="chip">Alat praktik</span><span class="chip">TIK</span><span class="chip">Keselamatan</span></div></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 20v-7M12 20V4M19 20v-10"/></svg></span>
+          <div><h3>Kondisi saat ini</h3><p class="cond">Pemutakhiran dan pemeliharaan menjadi kebutuhan</p></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4l13 4-13 5"/></svg></span>
+          <div><h3>Strategi</h3><div class="strat"><div class="s"><h4>Prioritas alat</h4><p>Menyusun prioritas pengadaan alat praktik dan TIK berdasarkan kebutuhan kompetensi keahlian dan ketersediaan anggaran.</p></div><div class="s"><h4>Maintenance</h4><p>Menjadwalkan perawatan rutin agar sarana dan prasarana tetap berfungsi baik dan awet digunakan.</p></div><div class="s"><h4>Kalibrasi</h4><p>Melakukan kalibrasi berkala pada alat ukur dan mesin praktik agar hasil praktik akurat dan sesuai standar.</p></div><div class="s"><h4>K3</h4><p>Menerapkan Keselamatan dan Kesehatan Kerja di bengkel dan laboratorium: alat pelindung diri, rambu, dan prosedur kerja aman.</p></div></div></div></li>
+      </ol>
+    </article>
+    <article class="detail" id="d7" role="tabpanel" aria-labelledby="t7" hidden>
+      <header><span class="num">7</span><h2>Standar Pengelolaan</h2></header>
+      <ol class="flow">
+        <li><span class="node"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+          <div><h3>Fokus</h3><div class="chips"><span class="chip">Perencanaan dan Monev</span></div></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 20v-7M12 20V4M19 20v-10"/></svg></span>
+          <div><h3>Kondisi saat ini</h3><p class="cond">Perlu konsolidasi dashboard mutu</p></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4l13 4-13 5"/></svg></span>
+          <div><h3>Strategi</h3><div class="strat"><div class="s"><h4>RKJM-RKT-RKAS</h4><p>Menyusun perencanaan berjenjang yang saling terhubung: Rencana Kerja Jangka Menengah, Rencana Kerja Tahunan, dan Rencana Kegiatan dan Anggaran Sekolah.</p></div><div class="s"><h4>Monev</h4><p>Memantau dan mengevaluasi pelaksanaan program secara berkala, didukung dashboard mutu, sebagai dasar perbaikan.</p></div><div class="s"><h4>Audit internal</h4><p>Melakukan audit internal untuk memastikan program dan penggunaan anggaran berjalan sesuai rencana dan aturan.</p></div></div></div></li>
+      </ol>
+    </article>
+    <article class="detail" id="d8" role="tabpanel" aria-labelledby="t8" hidden>
+      <header><span class="num">8</span><h2>Standar Pembiayaan</h2></header>
+      <ol class="flow">
+        <li><span class="node"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+          <div><h3>Fokus</h3><div class="chips"><span class="chip">Kecukupan</span><span class="chip">Efisiensi</span><span class="chip">Akuntabilitas</span></div></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 20v-7M12 20V4M19 20v-10"/></svg></span>
+          <div><h3>Kondisi saat ini</h3><p class="cond">Sumber daya terbatas</p></div></li>
+        <li><span class="node"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4l13 4-13 5"/></svg></span>
+          <div><h3>Strategi</h3><div class="strat"><div class="s"><h4>Anggaran berbasis prioritas dan ketentuan BOSP/BOS</h4><p>Menyusun anggaran sesuai prioritas program mutu dan mengelola dana BOSP/BOS sesuai ketentuan, secara efisien, transparan, dan akuntabel.</p></div></div></div></li>
+      </ol>
+    </article>
+  </section>
+</main>
+
+<a class="nav back" id="back" href="visimisi.html" aria-label="Kembali ke halaman sebelumnya">
+  <svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c1" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+    <text><textPath href="#c1">BACK • SEBELUMNYA • BACK • SEBELUMNYA •</textPath></text></svg>
+  <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span>
+</a>
+
+<a class="nav next" id="next" href="rkt.html" aria-label="Lanjut ke halaman berikutnya">
+  <svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c2" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+    <text><textPath href="#c2">NEXT • SELANJUTNYA • NEXT • SELANJUTNYA •</textPath></text></svg>
+  <span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+</a>
+
+<div class="doors enter" id="doors"><i class="l"></i><i class="r"></i></div>
+
+<script>
+  /* pilih standar */
+  const tabs = [...document.querySelectorAll('.tab')];
+  const panels = [...document.querySelectorAll('.detail')];
+  const stage = document.querySelector('.stage');
+  /* warna latar tiap standar: teal, biru, ungu, magenta, cokelat, hijau, zaitun, merah marun */
+  const colors = ['#0F4F5A','#1D4E89','#4A2C7A','#7A2E4D','#8A4B12','#2F6B2F','#5F5A12','#7D2430'];
+  tabs.forEach((t,i)=> t.style.setProperty('--c', colors[i]));
+  stage.style.setProperty('--stage', colors[0]);
+  let cur = 0;
+  function pick(n){
+    cur = (n + tabs.length) % tabs.length;
+    stage.style.setProperty('--stage', colors[cur]);
+    tabs.forEach((t,i)=> t.setAttribute('aria-selected', i===cur));
+    panels.forEach((p,i)=>{
+      p.hidden = i!==cur;
+      p.classList.toggle('show', i===cur);
+    });
+    tabs[cur].scrollIntoView({block:'nearest',inline:'nearest'});
+  }
+  tabs.forEach((t,i)=> t.addEventListener('click', ()=>pick(i)));
+
+  /* transisi halaman */
+  const doors = document.getElementById('doors');
+  doors.lastElementChild.addEventListener('animationend', ()=> doors.classList.remove('enter'));
+  function go(id){
+    const a = document.getElementById(id);
+    doors.classList.remove('enter');
+    doors.getBoundingClientRect();
+    doors.classList.add('go');
+    setTimeout(()=>{ location.href = a.getAttribute('href'); }, 700);
+  }
+  ['back','next'].forEach(id=>{
+    document.getElementById(id).addEventListener('click', e=>{ e.preventDefault(); go(id); });
+  });
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight') go('next');
+    if(e.key==='ArrowLeft')  go('back');
+    if(e.key==='ArrowDown'){ e.preventDefault(); pick(cur+1); }
+    if(e.key==='ArrowUp'){ e.preventDefault(); pick(cur-1); }
+  });
+</script>
+</body>
+</html>
